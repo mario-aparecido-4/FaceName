@@ -1,0 +1,65 @@
+.main-content {
+    flex-grow: 1;
+    padding: 0 0 20px;
+}
+
+/* ITEM DA LISTA (Padrão) */
+.list-group-item {
+    background-color: white;
+    /* Texto escuro (padrão do FaceName) em vez do roxo escuro */
+    color: var(--fn-text); 
+    border: none;
+    margin-bottom: 5px;
+    border-radius: 25px; /* Mantendo o estilo arredondado */
+    padding: 15px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* CABEÇALHO DA LISTA (Nome | Matrícula) */
+.list-group-item.header {
+    background-color: transparent;
+    font-weight: bold;
+    /* IMPORTANTE: Mudou de White para Escuro, pois o fundo do site é claro agora */
+    color: #444; 
+}
+
+/* Cursor Pointer para itens clicáveis */
+.list-group-item.item {
+    cursor: pointer;
+}
+
+/* HOVER E ATIVO (Fica Verde) */
+.list-group-item.item.active,
+.list-group-item.item:hover {
+    background-color: var(--fn-green); /* Verde FaceName */
+    color: white;
+}
+
+/* --- PAGINAÇÃO --- */
+
+.pagination .page-link {
+    color: var(--fn-text); /* Texto escuro por padrão */
+}
+
+.pagination .page-link:hover {
+    background-color: var(--fn-green);
+    color: #FFFFFF;
+    border-color: var(--fn-green);
+}
+
+.pagination .page-item.active .page-link {
+    background-color: var(--fn-green);
+    color: #FFFFFF;
+    border-color: var(--fn-green);
+}
+
+/* DESABILITADOS (Ex: Anterior na pág 1) */
+.pagination .page-item.disabled .page-link {
+    /* Fundo cinza claro para combinar com o tema light */
+    background-color: #e9ecef; 
+    color: #6c757d; 
+    border-color: #e9ecef;
+}

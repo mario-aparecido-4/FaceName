@@ -1,0 +1,317 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{% if curso %}
+
+<div class="card shadow-sm border-0 mb-4" style="background: linear-gradient(to right, #ffffff, #f8f9fa); border-left: 5px solid #0d6619;">
+    <div class="card-body p-3">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div class="d-flex align-items-center">
+                <div class="rounded-circle d-flex align-items-center justify-content-center text-white me-3 shadow-sm" 
+                     style="width: 50px; height: 50px; background-color: #0d6619; font-size: 1.5rem;">
+                    <i class="bi bi-building"></i>
+                </div>
+                <div>
+                    <h6 class="text-uppercase text-muted fw-bold mb-0" style="font-size: 0.7rem; letter-spacing: 1px;">Visão Geral do Curso</h6>
+                    <h4 class="mb-0 fw-bold text-dark">{{ curso.descricao }}</h4>
+                </div>
+            </div>
+            <div class="text-end">
+                <span class="badge bg-light text-dark border px-3 py-2 rounded-pill">
+                    ID: {{ curso.id }}
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-4 row-cols-1 row-cols-md-2 row-cols-lg-5">
+    <div class="col">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body p-3 d-flex align-items-center">
+                <div class="rounded-circle bg-light d-flex align-items-center justify-content-center me-3" style="width: 45px; height: 45px; color: #0d6619;">
+                    <i class="bi bi-graph-up-arrow fs-5"></i>
+                </div>
+                <div>
+                    <small class="text-muted d-block" style="line-height: 1;">Média do Curso</small>
+                    <h3 class="fw-bold mb-0 text-dark">{{ media_curso }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body p-3 d-flex align-items-center">
+                <div class="rounded-circle bg-light d-flex align-items-center justify-content-center me-3" style="width: 45px; height: 45px; color: #10ac84;">
+                    <i class="bi bi-people fs-5"></i>
+                </div>
+                <div>
+                    <small class="text-muted d-block" style="line-height: 1;">Total Alunos</small>
+                    <h3 class="fw-bold mb-0 text-dark">{{ total_alunos }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body p-3 d-flex align-items-center">
+                <div class="rounded-circle bg-light d-flex align-items-center justify-content-center me-3" style="width: 45px; height: 45px; color: #218c74;">
+                    <i class="bi bi-door-open-fill fs-5"></i>
+                </div>
+                <div>
+                    <small class="text-muted d-block" style="line-height: 1;">Turmas</small>
+                    <h3 class="fw-bold mb-0 text-dark">{{ total_turmas }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card shadow-sm border-0 h-100" style="background: #e6fffa;">
+            <div class="card-body p-3 d-flex align-items-center">
+                <div class="rounded-circle bg-white d-flex align-items-center justify-content-center me-3 shadow-sm" style="width: 45px; height: 45px; color: #0d6619;">
+                    <i class="bi bi-star-fill fs-5"></i>
+                </div>
+                <div style="overflow: hidden;">
+                    <small class="text-success d-block fw-bold" style="line-height: 1;">Melhor Desempenho</small>
+                    <h6 class="fw-bold mb-0 text-dark mt-1 text-truncate" title="{{ melhor_materia }}" style="font-size: 0.85rem;">{{ melhor_materia }}</h6>
+                    <small class="text-muted">{{ media_melhor_materia }}</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card shadow-sm border-0 h-100" style="background: #fff5f5;">
+            <div class="card-body p-3 d-flex align-items-center">
+                <div class="rounded-circle bg-white d-flex align-items-center justify-content-center me-3 shadow-sm" style="width: 45px; height: 45px; color: #d63031;">
+                    <i class="bi bi-exclamation-triangle-fill fs-5"></i>
+                </div>
+                <div style="overflow: hidden;">
+                    <small class="text-danger d-block fw-bold" style="line-height: 1;">Maior Dificuldade</small>
+                    <h6 class="fw-bold mb-0 text-dark mt-1 text-truncate" title="{{ pior_materia }}" style="font-size: 0.85rem;">{{ pior_materia }}</h6>
+                    <small class="text-muted">{{ media_pior }}</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="d-grid gap-2 mb-4">
+    <button class="btn btn-lg text-white shadow-sm" 
+            style="background-color: #0d6619; border: none; font-size: 1rem;" 
+            type="button" 
+            data-bs-toggle="collapse" 
+            data-bs-target="#turmasCollapse">
+        <i class="bi bi-list-ul me-2"></i> Visualizar Todas as Turmas
+    </button>
+</div>
+
+<div class="collapse mb-5" id="turmasCollapse">
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0" style="font-size: 0.9rem;">
+                    <thead class="bg-light text-secondary">
+                        <tr>
+                            <th class="ps-4 fw-bold">Descrição</th>
+                            <th class="fw-bold">Ano</th>
+                            <th class="fw-bold">Série</th>
+                            <th class="fw-bold">Turno</th>
+                            <th class="text-end pe-4 fw-bold">Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for t in turmas_list %}
+                        <tr>
+                            <td class="ps-4 fw-bold text-dark">{{ t.descricao }}</td>
+                            <td class="text-muted">{{ t.ano }}</td>
+                            <td class="text-muted">{{ t.serie.descricao }}</td>
+                            <td class="text-muted">{{ t.turno.descricao }}</td>
+                            <td class="text-end pe-4">
+                                <a href="{% url 'turma_detail' t.id t.ano %}" class="btn btn-sm btn-outline-success rounded-pill px-3 py-1" style="font-size: 0.8rem;">
+                                    Ver Turma
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="5" class="text-center py-4">Nenhuma turma encontrada.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+
+    <div class="col-lg-7">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-white border-0 py-2">
+                <h6 class="card-title mb-0 text-secondary fw-bold" style="font-size: 0.9rem;">Ranking de Desempenho (Turmas)</h6>
+            </div>
+            <div class="card-body p-2 d-flex align-items-center">
+                <div style="height: 350px; width: 100%;">
+                    <canvas id="chartTurmas"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="d-flex flex-column gap-3 h-100">
+            
+            <div class="card shadow-sm border-0" style="background: linear-gradient(135deg, #0d6619 0%, #073305 100%); color: white;">
+                <div class="card-body p-4 d-flex flex-column justify-content-center text-center">
+                    <div class="mb-3">
+                        <i class="bi bi-trophy-fill display-4 text-warning drop-shadow"></i>
+                    </div>
+                    <h6 class="text-uppercase mb-1" style="opacity: 0.9; letter-spacing: 1px;">Turma Destaque</h6>
+                    <h2 class="fw-bold mb-1">{{ melhor_turma }}</h2>
+                    <span class="badge bg-white text-success rounded-pill px-3 py-2 mt-2 align-self-center">
+                        Média: {{ media_melhor_turma }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0 flex-grow-1">
+                <div class="card-header bg-white border-0 py-3">
+                    <h6 class="fw-bold text-dark mb-0"><i class="bi bi-person-check-fill me-2 text-success"></i>Alunos Destaque (Média Global)</h6>
+                </div>
+                <ul class="list-group list-group-flush">
+                    {% for a in top_5_alunos %}
+                    <li class="list-group-item border-0 d-flex justify-content-between align-items-center py-2 px-3">
+                        <div class="d-flex align-items-center">
+                            <span class="fw-bold text-muted me-3 small">{{ forloop.counter }}º</span>
+                            <div style="line-height: 1.1;">
+                                <span class="d-block fw-bold text-dark">{{ a.nome }}</span>
+                                <small class="text-muted" style="font-size: 0.75rem;">
+                                    <i class="bi bi-mortarboard-fill me-1"></i>{{ a.turma }}
+                                </small>
+                            </div>
+                        </div>
+                        <span class="badge bg-success bg-opacity-10 text-success border border-success fs-6">{{ a.media }}</span>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item text-muted small text-center">Sem dados de alunos.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+        </div>
+    </div>
+    
+</div>
+
+<div class="row g-3 mb-3">
+    <div class="col-lg-6">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-white border-0 py-2">
+                <h6 class="card-title mb-0 text-secondary fw-bold" style="font-size: 0.9rem;">Desempenho por Série</h6>
+            </div>
+            <div class="card-body p-2">
+                <div style="height: 200px; width: 100%;">
+                    <canvas id="chartSeries"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-white border-0 py-2">
+                <h6 class="card-title mb-0 text-secondary fw-bold" style="font-size: 0.9rem;">Distribuição de Notas</h6>
+            </div>
+            <div class="card-body p-2">
+                <div style="height: 200px; width: 100%;">
+                    <canvas id="chartDistribuicao"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+    <div class="alert alert-warning text-center m-5 shadow-sm border-0" role="alert">
+        <h4 class="alert-heading">Curso não encontrado!</h4>
+    </div>
+{% endif %}
+
+<script>
+    Chart.defaults.font.family = "'Segoe UI', sans-serif";
+    Chart.defaults.color = '#636e72';
+    Chart.defaults.font.size = 11;
+
+    // 1. RANKING TURMAS
+    const ctxTurmas = document.getElementById('chartTurmas').getContext('2d');
+    new Chart(ctxTurmas, {
+        type: 'bar',
+        data: {
+            labels: {{ bar_turmas_labels|safe }},
+            datasets: [{
+                label: 'Média',
+                data: {{ bar_turmas_data|safe }},
+                backgroundColor: '#0d6619', 
+                borderRadius: 4,
+                barPercentage: 0.6
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { x: { beginAtZero: true, max: 10 }, y: { grid: { display: false } } }
+        }
+    });
+
+    // 2. EVOLUÇÃO POR SÉRIE
+    const ctxSeries = document.getElementById('chartSeries').getContext('2d');
+    new Chart(ctxSeries, {
+        type: 'line',
+        data: {
+            labels: {{ line_series_labels|safe }},
+            datasets: [{
+                label: 'Média por Ano/Série',
+                data: {{ line_series_data|safe }},
+                borderColor: '#10ac84', 
+                backgroundColor: 'rgba(16, 172, 132, 0.1)',
+                borderWidth: 3,
+                pointBackgroundColor: '#fff',
+                pointBorderColor: '#10ac84',
+                pointRadius: 5,
+                fill: true,
+                tension: 0.3
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true, max: 10, grid: { borderDash: [5, 5] } }, x: { grid: { display: false } } }
+        }
+    });
+
+    // 3. DISTRIBUIÇÃO
+    const ctxDist = document.getElementById('chartDistribuicao').getContext('2d');
+    new Chart(ctxDist, {
+        type: 'bar',
+        data: {
+            labels: ['0-4', '4-6', '6-8', '8-10'],
+            datasets: [{
+                label: 'Total de Notas',
+                data: {{ distribuicao_data|safe }},
+                backgroundColor: ['#dbece2', '#82cc9e', '#2ecc71', '#0d6619'],
+                borderRadius: 4,
+                barPercentage: 0.5
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { y: { display: false }, x: { grid: { display: false } } }
+        }
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,178 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+<div class="mb-4 d-flex justify-content-between align-items-center">
+    <h4 class="fw-bold text-secondary"><i class="bi bi-grid-1x2 me-2"></i>Comparativo de Turmas</h4>
+    <a href="{% url 'comparar_index' %}" class="btn btn-outline-secondary btn-sm">Nova Comparação</a>
+</div>
+
+<div class="row g-0 mb-4 shadow-sm rounded overflow-hidden">
+    <div class="col-md-6 p-4 text-white position-relative" style="background: linear-gradient(135deg, #0d6619 0%, #0c9c30 100%);">
+        <div class="d-flex align-items-center gap-3">
+            <div class="rounded bg-white bg-opacity-25 p-3 d-flex align-items-center justify-content-center" style="width: 70px; height: 70px;">
+                <i class="bi bi-people-fill fs-1 text-white"></i>
+            </div>
+            <div>
+                <h4 class="mb-0 fw-bold">{{ turma1.obj.descricao }}</h4>
+                <small class="opacity-75">{{ turma1.obj.curso.descricao }} - {{ turma1.obj.ano }}</small>
+            </div>
+        </div>
+        <div class="mt-4 row text-center">
+            <div class="col">
+                <small class="text-white-50 text-uppercase" style="font-size: 0.7rem;">Média Geral</small>
+                <div class="fs-4 fw-bold">{{ turma1.media_geral }}</div>
+            </div>
+            <div class="col border-start border-white border-opacity-25">
+                <small class="text-white-50 text-uppercase" style="font-size: 0.7rem;">Alunos</small>
+                <div class="fs-4 fw-bold">{{ turma1.qtd_alunos }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 p-4 text-white position-relative" style="background: linear-gradient(135deg, #0984e3 0%, #185fa1 100%);">
+        <div class="d-flex align-items-center flex-row-reverse gap-3 text-end">
+            <div class="rounded bg-white bg-opacity-25 p-3 d-flex align-items-center justify-content-center" style="width: 70px; height: 70px;">
+                <i class="bi bi-people-fill fs-1 text-white"></i>
+            </div>
+            <div>
+                <h4 class="mb-0 fw-bold">{{ turma2.obj.descricao }}</h4>
+                <small class="opacity-75">{{ turma2.obj.curso.descricao }} - {{ turma2.obj.ano }}</small>
+            </div>
+        </div>
+        <div class="mt-4 row text-center flex-row-reverse">
+            <div class="col">
+                <small class="text-white-50 text-uppercase" style="font-size: 0.7rem;">Média Geral</small>
+                <div class="fs-4 fw-bold">{{ turma2.media_geral }}</div>
+            </div>
+            <div class="col border-end border-white border-opacity-25">
+                <small class="text-white-50 text-uppercase" style="font-size: 0.7rem;">Alunos</small>
+                <div class="fs-4 fw-bold">{{ turma2.qtd_alunos }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white border-0 pt-3">
+                <h6 class="fw-bold m-0 text-dark">Evolução Bimestral (Média)</h6>
+            </div>
+            <div class="card-body">
+                <div style="height: 300px;">
+                    <canvas id="chartLine"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white border-0 pt-3">
+                <h6 class="fw-bold m-0 text-dark">Desempenho por Área</h6>
+            </div>
+            <div class="card-body position-relative">
+                <div style="height: 300px;">
+                    <canvas id="chartRadar"></canvas>
+                </div>
+                
+                <div id="noDataWarning" class="position-absolute top-50 start-50 translate-middle text-center d-none">
+                    <i class="bi bi-exclamation-circle text-muted fs-1"></i>
+                    <p class="text-muted small mt-2">Sem Áreas de Conhecimento cadastradas.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Configurações Globais
+    Chart.defaults.font.family = "'Segoe UI', sans-serif";
+    Chart.defaults.color = '#636e72';
+
+    // DADOS VINDOS DO DJANGO
+    const radarLabels = {{ radar_labels|safe }};
+    const radarData1 = {{ radar_data1|safe }};
+    const radarData2 = {{ radar_data2|safe }};
+
+    // --- 1. GRÁFICO DE LINHA ---
+    const ctxLine = document.getElementById('chartLine').getContext('2d');
+    new Chart(ctxLine, {
+        type: 'line',
+        data: {
+            labels: {{ line_labels|safe }},
+            datasets: [
+                {
+                    label: '{{ turma1.obj.descricao }}',
+                    data: {{ line_data1|safe }},
+                    borderColor: '#0d6619',
+                    backgroundColor: 'rgba(13, 102, 25, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.3,
+                    fill: true
+                },
+                {
+                    label: '{{ turma2.obj.descricao }}',
+                    data: {{ line_data2|safe }},
+                    borderColor: '#0984e3',
+                    backgroundColor: 'rgba(9, 132, 227, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.3,
+                    fill: true
+                }
+            ]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            scales: { y: { beginAtZero: true, max: 10 } }
+        }
+    });
+
+    // --- 2. GRÁFICO RADAR ---
+    if (radarLabels.length === 0) {
+        document.getElementById('noDataWarning').classList.remove('d-none');
+        document.getElementById('chartRadar').style.display = 'none';
+    } else {
+        const ctxRadar = document.getElementById('chartRadar').getContext('2d');
+        new Chart(ctxRadar, {
+            type: 'radar',
+            data: {
+                labels: radarLabels,
+                datasets: [
+                    {
+                        label: '{{ turma1.obj.descricao }}',
+                        data: radarData1,
+                        borderColor: '#0d6619',
+                        backgroundColor: 'rgba(13, 102, 25, 0.2)',
+                        borderWidth: 2,
+                        pointBackgroundColor: '#0d6619'
+                    },
+                    {
+                        label: '{{ turma2.obj.descricao }}',
+                        data: radarData2,
+                        borderColor: '#0984e3',
+                        backgroundColor: 'rgba(9, 132, 227, 0.2)',
+                        borderWidth: 2,
+                        pointBackgroundColor: '#0984e3'
+                    }
+                ]
+            },
+            options: {
+                responsive: true, 
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { display: true },
+                        suggestedMin: 0,
+                        suggestedMax: 10,
+                        ticks: { stepSize: 2, backdropColor: 'transparent' }
+                    }
+                },
+            }
+        });
+    }
+</script>
+{% endblock %}

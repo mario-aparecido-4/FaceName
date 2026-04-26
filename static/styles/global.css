@@ -1,0 +1,44 @@
+:root {
+    /* Cores do FaceName (Extraídas do seu base.html) */
+    --fn-green: #0d6619;       /* Era o roxo-claro-principal */
+    --fn-green-dark: #073305;  /* Para efeitos de hover */
+    --fn-bg: #cfcfcf;          /* Era o roxo-escuro-pri */
+    --fn-scroll-track: #e0e0e0; /* Cor do trilho da barra (adaptado para tema claro) */
+}
+
+body {
+    padding: 0;
+    margin: 0;
+    /* Muda do roxo escuro para o cinza claro do FaceName */
+    background-color: var(--fn-bg); 
+}
+
+/* --- SCROLLBAR PERSONALIZADA (TEMA FACENAME) --- */
+
+/* WebKit (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    /* O fundo do trilho agora é claro para combinar com o site */
+    background: var(--fn-scroll-track); 
+}
+
+::-webkit-scrollbar-thumb {
+    /* A barra agora é o Verde Oficial */
+    background: var(--fn-green); 
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    /* Fica verde escuro ao passar o mouse */
+    background: var(--fn-green-dark); 
+}
+
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    /* [Cor da Barra] [Cor do Trilho] */
+    scrollbar-color: var(--fn-green) var(--fn-scroll-track);
+}

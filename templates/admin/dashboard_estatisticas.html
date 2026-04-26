@@ -1,0 +1,37 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<div class="dashboard-container">
+    <h1>{{ title }}</h1>
+
+    <div class="grafico-section">
+        <h2>Evolução Bimestral</h2>
+        <img src="data:image/png;base64,{{ evolucao }}" class="grafico-img">
+    </div>
+
+    <div class="grafico-section">
+        <h2>Heatmap de Desempenho</h2>
+        <img src="data:image/png;base64,{{ heatmap }}" class="grafico-img">
+    </div>
+</div>
+
+<style>
+    .dashboard-container {
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 20px;
+    }
+
+    .grafico-section {
+        background: white;
+        padding: 20px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .grafico-img {
+        width: 100%;
+        border: 1px solid #eee;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,306 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<h2 class="fw-bold text-dark mb-0" style="padding-bottom: 20px;">{{ saudacao}}, {{ user.first_name|default:user.username }}. Seja bem-vindo!</h2>
+
+<div class="row g-3 mb-4">
+    <div class="col-lg-3 col-6">
+        <div class="card border-0 shadow-sm h-100 p-3" style="border-bottom: 3px solid #052633 !important;">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <h6 class="text-muted mb-1 small fw-bold text-uppercase">Alunos</h6>
+                    <h3 class="mb-0 fw-bold text-dark">{{ total_alunos }}</h3>
+                </div>
+                <div class="rounded-circle bg-light d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; color: #052633;">
+                    <i class="bi bi-people-fill fs-5"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-6">
+        <div class="card border-0 shadow-sm h-100 p-3" style="border-bottom: 3px solid #7ed957 !important;">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <h6 class="text-muted mb-1 small fw-bold text-uppercase">Média Global</h6>
+                    <h3 class="mb-0 fw-bold text-dark">{{ media_escola }}</h3>
+                </div>
+                <div class="rounded-circle bg-light d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; color: #7ed957;">
+                    <i class="bi bi-graph-up-arrow fs-5"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-6">
+        <div class="card border-0 shadow-sm h-100 p-3" style="border-bottom: 3px solid #ffde59 !important;">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <h6 class="text-muted mb-1 small fw-bold text-uppercase">Aprovação</h6>
+                    <h3 class="mb-0 fw-bold text-dark">{{ percent_sucesso }}%</h3>
+                </div>
+                <div class="rounded-circle bg-light d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; color: #ffde59;">
+                    <i class="bi bi-check2-circle fs-5"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-6">
+        <div class="card border-0 shadow-sm h-100 p-3" style="border-bottom: 3px solid #0d6619 !important;">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <h6 class="text-muted mb-1 small fw-bold text-uppercase">Turmas Cadastradas</h6>
+                    <h3 class="mb-0 fw-bold text-dark">{{ total_turmas }}</h3>
+                </div>
+                <div class="rounded-circle bg-light d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; color: #0d6619;">
+                    <i class="bi bi-grid-fill fs-5"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+
+
+<div class="row g-3 mb-4">
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white border-0 py-2">
+                <h6 class="fw-bold text-dark mb-0 small"><i class="bi bi-bar-chart-fill me-2 text-primary"></i>Distribuição de Notas</h6>
+            </div>
+            <div class="card-body p-2 d-flex align-items-center justify-content-center">
+                <div style="height: 200px; width: 100%;">
+                    <canvas id="chartDistribuicao"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white border-0 py-2">
+                <h6 class="fw-bold text-dark mb-0 small"><i class="bi bi-pie-chart-fill me-2 text-purple" style="color: #0d6619;"></i>Desempenho por Curso</h6>
+            </div>
+            <div class="card-body p-2 d-flex align-items-center justify-content-center">
+                <div style="height: 200px; width: 100%;">
+                    <canvas id="chartCursos"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-5">
+    
+    <div class="col-lg-8">
+        <div class="row g-3 h-100">
+            
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-header bg-white border-0 py-3 d-flex align-items-center">
+                        <i class="bi bi-trophy-fill fs-5 me-2" style="color: #0d6619;"></i>
+                        <h6 class="fw-bold text-dark mb-0 text-uppercase">Melhores Turmas</h6>
+                    </div>
+                    
+                    <ul class="list-group list-group-flush">
+                        {% for t in top_turmas|slice:":4" %}
+                        <li class="list-group-item border-0 d-flex justify-content-between align-items-center py-2 px-3">
+                            <span class="fw-bold text-dark small">{{ t.nome }}</span>
+                            <span class="badge bg-success bg-opacity-10 text-success border border-success rounded-pill fw-bold">{{ t.media }}</span>
+                        </li>
+                        {% empty %}
+                        <li class="list-group-item border-0 text-muted small py-2">Sem dados.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-header bg-white border-0 py-3 d-flex align-items-center">
+                        <i class="bi bi-star-fill fs-5 me-2" style="color: #0d6619;"></i>
+                        <h6 class="fw-bold text-dark mb-0 text-uppercase">Alunos Destaque</h6>
+                    </div>
+                    
+                    <ul class="list-group list-group-flush">
+                        {% for a in top_alunos_geral|slice:":3" %}
+                        <li class="list-group-item border-0 d-flex justify-content-between align-items-center py-2 px-3">
+                            <div class="d-flex flex-column justify-content-center">
+                                <span class="fw-bold text-dark small mb-0" style="line-height: 1.2;">{{ a.nome }}</span>
+                                <span class="text-muted" style="font-size: 0.65rem;">{{ a.turma }}</span>
+                            </div>
+                            <span  class="badge bg-success bg-opacity-10 text-success border border-success rounded-pill fw-bold">{{ a.media }}</span>
+                        </li>
+                        {% empty %}
+                        <li class="list-group-item border-0 text-muted small py-2">Sem dados.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-header bg-white border-0 py-3 d-flex align-items-center">
+                        <i class="bi bi-exclamation-triangle-fill fs-5 me-2" style="color: #0d6619;"></i>
+                        <h6 class="fw-bold text-dark mb-0 text-uppercase">Turmas em Alerta</h6>
+                    </div>
+                    
+                    <ul class="list-group list-group-flush ">
+                        {% for t in piores_turmas|slice:":4" %}
+                        <li class="list-group-item border-0 d-flex justify-content-between align-items-center py-2 px-3">
+                            <span class="fw-bold text-dark small">{{ t.nome }}</span>
+                            <span class="badge bg-danger bg-opacity-10 text-danger border border-danger rounded-pill fw-bold">{{ t.media }}</span>
+                        </li>
+                        {% empty %}
+                        <li class="list-group-item border-0 text-success small py-2"><i class="bi bi-check me-1"></i> Tudo ok!</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-header bg-white border-0 py-3 d-flex align-items-center">
+                        <i class="bi bi-cone-striped fs-5 me-2" style="color: #0d6619;"></i>
+                        <h6 class="fw-bold text-dark mb-0 text-uppercase">Disciplinas Críticas</h6>
+                    </div>
+
+                    <ul class="list-group list-group-flush ">
+                        {% for d in gargalos_disciplinas|slice:":4" %}
+                        <li class="list-group-item border-0 d-flex justify-content-between align-items-center py-2 px-3">
+                            <span class="fw-bold text-dark small">{{ d.nome }}</span>
+                            <span class="badge bg-danger bg-opacity-10 text-danger border border-danger rounded-pill fw-bold">{{ d.media }}</span>
+                        </li>
+                        {% empty %}
+                        <li class="list-group-item border-0 text-success small py-2"><i class="bi bi-check me-1"></i> Tudo ok!</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+
+<div class="col-lg-4">
+
+    <div class="row g-2"> 
+        
+        <div class="col-6">
+            <a href="{% url 'comparar_index' %}" class="card border-0 shadow-sm h-100 text-decoration-none btn-action" style="background: #052633; color: white;">
+                <div class="card-body d-flex flex-column align-items-center justify-content-center text-center p-3">
+                    <i class="bi bi-people-fill fs-2 mb-2"></i>
+                    <small class="fw-bold text-uppercase">Comparar</small>
+                </div>
+            </a>
+        </div>
+        <div class="col-6">
+            <a href="{% url 'curso_selection' %}" class="card border-0 shadow-sm h-100 text-decoration-none btn-action" style="background: #ffde59; color: rgb(0, 0, 0);">
+                <div class="card-body d-flex flex-column align-items-center justify-content-center text-center p-3">
+                    <i class="bi bi-grid-fill fs-2 mb-2"></i>
+                    <small class="fw-bold text-uppercase">Cursos</small>
+                </div>
+            </a>
+        </div>
+        
+        <div class="col-12 mt-2">
+            <a href="{% url 'disciplinas_index' %}" class="card border-0 shadow-sm text-decoration-none btn-action" 
+               style="background: #fff; border: 2px solid #0d6619 !important; color: #0d6619;">
+                <div class="card-body d-flex flex-row align-items-center justify-content-center p-3">
+                    <i class="bi bi-journal-bookmark-fill fs-2 me-3"></i>
+                    <div class="text-start">
+                        <h6 class="fw-bold text-uppercase mb-0">Disciplinas</h6>
+                        <small class="text-muted" style="font-size: 0.75rem;">Ver desempenho por matéria</small>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+    </div>
+    
+</div>
+
+<style>
+    /* Estilos dos Botões e Abas */
+    .btn-action { transition: transform 0.2s, opacity 0.2s; }
+    .btn-action:hover { transform: translateY(-3px); opacity: 0.9; }
+    
+    /* Animações */
+    .progress-animation { 
+        width: 0%; 
+        animation: progress 5s linear infinite; 
+        background-color: #0d6619 !important; /* Verde FaceName */
+    }
+    
+    @keyframes progress { 
+        0% { width: 0%; } 
+        100% { width: 100%; } 
+    }
+    
+    .drop-shadow-gold { filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6)); }
+    .blink-animation { animation: blinker 1.5s linear infinite; }
+    @keyframes blinker { 50% { opacity: 0; } }
+</style>
+
+<script>
+    Chart.defaults.font.family = "'Segoe UI', sans-serif";
+    Chart.defaults.color = '#636e72';
+    Chart.defaults.font.size = 11;
+
+    // 1. HISTOGRAMA (Tons de Verde - Degradê FaceName)
+    const ctxDist = document.getElementById('chartDistribuicao').getContext('2d');
+    new Chart(ctxDist, {
+        type: 'bar',
+        data: {
+            labels: ['0-2', '2-4', '4-6', '6-8', '8-10'],
+            datasets: [{
+                label: 'Alunos',
+                data: {{ dist_data|safe }},
+                backgroundColor: [
+                    '#dbece2', // Verde Muito Claro (0-2)
+                    '#b3dec1', // Verde Claro (2-4)
+                    '#82cc9e', // Verde Médio (4-6)
+                    '#4bb57c', // Verde Suave (6-8)
+                    '#0d6619'  // Verde FaceName (8-10)
+                ],
+                borderRadius: 4, 
+                barPercentage: 0.6
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { y: { display: false }, x: { grid: { display: false } } }
+        }
+    });
+
+    // 2. CURSOS (Polar Area - Transparências Verdes)
+    const ctxCursos = document.getElementById('chartCursos').getContext('2d');
+    new Chart(ctxCursos, {
+        type: 'polarArea',
+        data: {
+            labels: {{ curso_labels|safe }},
+            datasets: [{
+                data: {{ curso_data|safe }},
+                backgroundColor: [
+                    'rgba(13, 102, 25, 0.85)', // Forte
+                    'rgba(13, 102, 25, 0.70)', 
+                    'rgba(13, 102, 25, 0.55)', 
+                    'rgba(13, 102, 25, 0.40)', 
+                    'rgba(13, 102, 25, 0.25)'  // Bem claro
+                ],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom', labels: { boxWidth: 10 } } },
+            scales: { r: { ticks: { display: false }, grid: { color: '#f1f2f6' } } }
+        }
+    });
+</script>
+
+{% endblock %}

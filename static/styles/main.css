@@ -1,0 +1,6 @@
+@import url('global.css');
+@import url('layouts/navbar.css');
+@import url('layouts/footer.css');
+@import url('pages/aluno_list.css');
+@import url('components/botaopesquisa.css');
+@import url('components/boletim_aluno_detail.css');

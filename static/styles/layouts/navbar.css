@@ -1,0 +1,32 @@
+/* Modifica o navbar */
+.navbar-principal {
+    /* Era o roxo-claro-principal */
+    background-color: var(--fn-green);
+}
+
+/* Modifica cor de fundo das opções dentro de cursos e turmas */
+.navbar-principal .dropdown-menu {
+  /* MUDANÇA IMPORTANTE: No tema Light, o menu deve ser BRANCO, não escuro */
+  background-color: #ffffff; 
+  border: 1px solid rgba(0,0,0,0.15); /* Borda suave */
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); /* Sombra para destacar */
+}
+
+/* Muda a cor do texto de cada opção do dropdown */
+.navbar-principal .dropdown-menu .dropdown-item {
+  /* Texto escuro para ler no fundo branco */
+  color: var(--fn-text); 
+}
+
+/* Muda cor de fundo ao passar o mouse ou selecionar */
+.navbar-principal .dropdown-menu .dropdown-item:hover,
+.navbar-principal .dropdown-menu .dropdown-item:focus {
+  /* Fundo Verde e Texto Branco */
+  background-color: var(--fn-green); 
+  color: white;
+}
+
+.dropdown-item.active, .dropdown-item:active {
+  background-color: var(--fn-green);
+  color: white; /* Garante que o texto fique branco no ativo */
+}

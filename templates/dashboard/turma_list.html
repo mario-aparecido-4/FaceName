@@ -1,0 +1,122 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block title %}Turmas{% endblock title %}
+
+{% block content %} 
+<form method="GET" class="d-flex mb-3 align-items-center" role="search">
+        
+    {% if request.GET.modo_comparacao %}
+        <input type="hidden" name="modo_comparacao" value="true">
+    {% endif %}
+    {% if request.GET.id1 %}
+        <input type="hidden" name="id1" value="{{ request.GET.id1 }}">
+    {% endif %}
+
+    <input 
+        class="form-control me-2" 
+        style="border-color: #0d6619;"
+        type="search" 
+        name="q" 
+        placeholder="Pesquisar turma ou curso..." 
+        value="{{ q_atual }}">
+
+    <button class="btn text-white" style="background-color: #0d6619;" type="submit">
+        <i class="bi bi-search"></i>
+    </button>
+
+    </form>
+
+<div class="main-content" style="font-family: 'Segoe UI', sans-serif;">
+
+    {% if request.GET.modo_comparacao %}
+    <div class="alert shadow-sm mb-3 border-0 text-white" style="background: linear-gradient(to right, #0d6619, #10ac84);" role="alert">
+        <div class="d-flex align-items-center">
+            <div class="rounded-circle bg-white bg-opacity-25 p-2 me-3">
+                <i class="bi bi-grid-fill fs-4 text-white"></i>
+            </div>
+            <div>
+                <h6 class="fw-bold mb-0">Modo Comparação de Turmas</h6>
+                <p class="mb-0 small opacity-75">
+                    {% if request.GET.id1 %}
+                        PASSO 2: Selecione a <strong>segunda turma</strong> para gerar o gráfico.
+                    {% else %}
+                        PASSO 1: Selecione a <strong>primeira turma</strong>.
+                    {% endif %}
+                </p>
+            </div>
+            <a href="{% url 'turma_list' %}" class="btn btn-sm btn-light ms-auto text-success fw-bold rounded-pill px-3">Cancelar</a>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="list-group mb-2">
+        <div class="list-group-item border-0 fw-bold d-flex justify-content-between text-secondary bg-transparent">
+            <span>Descrição da Turma</span>
+            <span class="pe-4">Detalhes</span>
+        </div>
+    </div>
+
+    <div class="overflow-auto pe-2" style="height: 55vh;">
+        <div class="list-group gap-1">
+            {% for turma in turmas %}
+                
+                {% if request.GET.modo_comparacao %}
+                    {% if request.GET.id1 %}
+                        {% if request.GET.id1|stringformat:"s" == turma.pk|stringformat:"s" %}
+                            <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center border-0 rounded shadow-sm opacity-50 pe-none bg-light">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-check-circle-fill text-success me-3"></i>
+                                    <span class="fw-bold text-success">{{ turma.descricao }} (Selecionada)</span>
+                                </div>
+                            </a>
+                        {% else %}
+                            <a href="{% url 'comparar_turmas_resultado' %}?id1={{ request.GET.id1 }}&id2={{ turma.pk }}" 
+                               class="list-group-item list-group-item-action d-flex justify-content-between align-items-center border-0 rounded shadow-sm">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-circle me-3 text-muted"></i>
+                                    <span>{{ turma.descricao }}</span>
+                                </div>
+                                <span class="badge bg-light text-dark border">Selecionar como 2ª</span>
+                            </a>
+                        {% endif %}
+                    {% else %}
+                        <a href="?modo_comparacao=true&id1={{ turma.pk }}" 
+                           class="list-group-item list-group-item-action d-flex justify-content-between align-items-center border-0 rounded shadow-sm">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-circle me-3 text-muted"></i>
+                                <span>{{ turma.descricao }}</span>
+                            </div>
+                            <span class="badge bg-light text-dark border">Selecionar como 1ª</span>
+                        </a>
+                    {% endif %}
+                
+                {% else %}
+                    <a href="{% url 'turma_detail' turma.pk turma.ano %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center border-0 rounded shadow-sm py-3">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded bg-light d-flex align-items-center justify-content-center me-3 border text-muted fw-bold" style="width: 40px; height: 40px;">
+                                {{ turma.ano|stringformat:"s"|slice:"2:" }}
+                            </div>
+                            <div>
+                                <h6 class="mb-0 fw-bold text-dark">{{ turma.descricao }}</h6>
+                                <small class="text-muted">{{ turma.curso.descricao }}</small>
+                            </div>
+                        </div>
+                        <span class="text-muted small">
+                            {{ turma.turno.descricao }}
+                        </span>
+                    </a>
+                {% endif %}
+
+            {% empty %}
+                <div class="text-center py-5 text-muted">
+                    <span>Nenhuma turma encontrada.</span>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="text-center mt-3 text-muted small">
+        {{ turmas|length }} turmas listadas
+    </div>
+</div>
+{% endblock content %}

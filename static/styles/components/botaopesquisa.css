@@ -1,0 +1,60 @@
+/* --- BOTÃO SÓLIDO (Antigo btn-roxo, agora Verde) --- */
+.btn-roxo {
+    background-color: var(--fn-green);  /* Verde Principal */
+    border-color: var(--fn-green);
+    color: white;
+    transition: all 0.3s ease;
+}
+
+/* Efeito Hover (Passar o mouse) */
+.btn-roxo:hover {
+    background-color: #0a4d13;  /* Verde levemente mais escuro */
+    border-color: #0a4d13;
+    color: white;
+}
+
+/* Efeito Active (Quando clica) */
+.btn-roxo:active {
+    background-color: #073305 !important; /* Verde bem escuro */
+    border-color: #073305 !important;
+}
+
+.btn-roxo:focus {
+    /* Anel de foco verde suave (RGB de #0d6619 é 13, 102, 25) */
+    box-shadow: 0 0 0 0.25rem rgba(13, 102, 25, 0.25);
+}
+
+/* --- BOTÃO OUTLINE (Fundo transparente, borda Verde) --- */
+.btn-outline-roxo {
+    color: var(--fn-green);             /* Texto/Ícone Verde */
+    border-color: var(--fn-green);      /* Borda Verde */
+    background-color: transparent;
+    transition: all 0.3s ease;
+}
+
+/* Hover (Mouse em cima: Fundo verde, texto branco) */
+.btn-outline-roxo:hover {
+    color: #ffffff;             
+    background-color: var(--fn-green);  
+    border-color: var(--fn-green);
+}
+
+/* Active/Show (Quando clica e o menu abre) */
+.btn-outline-roxo:active,
+.btn-outline-roxo.show,
+.btn-outline-roxo:focus {
+    color: #ffffff !important;
+    background-color: var(--fn-green) !important;
+    border-color: var(--fn-green) !important;
+    box-shadow: 0 0 0 0.25rem rgba(13, 102, 25, 0.25);
+}
+
+/* --- INPUTS DE FORMULÁRIO --- */
+.form-control-roxo:focus {
+    border-color: var(--fn-green); /* Borda Verde Sólida */
+    
+    /* O brilho em volta (Verde com 25% de transparência) */
+    box-shadow: 0 0 0 0.25rem rgba(13, 102, 25, 0.25); 
+    
+    outline: 0; 
+}

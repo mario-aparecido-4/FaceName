@@ -1,0 +1,25 @@
+{% extends "admin/change_list.html" %}
+
+{% block content %}
+<div class="dashboard-header">
+    <a href="estatisticas/" class="button">📊 Análises Avançadas</a>
+</div>
+
+{{ block.super }}
+
+<style>
+    .dashboard-header {
+        margin-bottom: 20px;
+        text-align: right;
+    }
+
+    .button {
+        background: #417690;
+        color: white;
+        padding: 8px 15px;
+        border-radius: 4px;
+        text-decoration: none;
+        display: inline-block;
+    }
+</style>
+{% endblock %}

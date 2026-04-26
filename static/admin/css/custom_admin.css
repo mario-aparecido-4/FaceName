@@ -1,0 +1,20 @@
+/* Este CSS personaliza a aparência do painel de administração do Django.
+  Ele deve ser salvo em: sua_app/static/admin/css/custom_admin.css
+*/
+
+/*
+  Seleciona os campos de input para notas, recuperações, faltas e status
+  dentro das tabelas de boletim (inlines) e define uma largura máxima.
+*/
+.tabular .form-row input[name*="bimestre"],
+.tabular .form-row input[name*="recusem"],
+.tabular .form-row input[name*="recfinal"],
+.tabular .form-row input[name*="final"],
+.tabular .form-row input[name*="faltas"],
+.tabular .form-row input[name*="faltaspercent"],
+.tabular .form-row input[name*="status"] {
+    max-width: 40px;
+    /* Define uma largura máxima mais apropriada */
+    text-align: center;
+    /* Centraliza o texto dentro do campo */
+}

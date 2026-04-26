@@ -1,0 +1,50 @@
+Ambiente Virtual
+
+venv/
+/venv/
+.venv/
+/.venv/
+
+Arquivos de Cache do Python
+
+pycache/
+*.pyc
+*.pyo
+*.pyd
+
+Arquivos da IDE (ex: VSCode, PyCharm)
+
+.vscode/
+.idea/
+
+Arquivos do Sistema Operacional
+
+.DS_Store
+Thumbs.db
+
+Arquivos de Dependências
+
+*.egg-info/
+*.egg
+
+Arquivos de Log e Banco de Dados Local
+
+*.log
+*.sqlite3
+db.sqlite3
+
+Arquivos de Mídia (Uploads) e Estáticos
+
+media/
+staticfiles/
+
+Arquivos de Ambiente
+
+.env
+*.env
+
+As fotu
+fotos_alunos/
+/fotos_alunos
+.fotos_alunos/
+./fotos_alunos
